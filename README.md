@@ -6,6 +6,9 @@ This application addresses a common issue faced by users of some Epson scanners 
 
 **Image Combiner** provides a solution by allowing users to scan a long document in two overlapping sections and then seamlessly merge these two image files into a single, continuous image. The application intelligently finds the best overlap between the two images to create a natural-looking join.
 
+## Screenshot
+![Screenshot](images/screenshot.png)
+
 ## Features
 
 *   **Graphical User Interface (GUI):** Easy-to-use interface built with Tkinter.
@@ -55,7 +58,17 @@ The application primarily uses the following Python libraries:
     *   If the aspect ratio doesn't perfectly match, the image is centered and padded with white to fill the target dimensions.
 5.  **Output:** The user is prompted to save the final processed image in their chosen format (PDF, PNG, or JPG).
 
-## Installation and Usage
+## Installation and Usage Method 1
+
+1.  **Running the Application:**
+    *   Save the executable file from the release. Click the application to run.
+    *   The application window will appear.
+    *   Click "Browse" to select your top and bottom image files, or drag and drop them if `tkinterdnd2` is installed.
+    *   Choose your desired "Output Paper Size" and "Output Format".
+    *   Click "Process & Save".
+    *   A save dialog will appear, allowing you to choose the location and name for your merged file.
+
+## Installation and Usage Method 2
 
 1.  **Prerequisites:**
     *   Python 3.x
