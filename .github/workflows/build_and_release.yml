@@ -1,0 +1,50 @@
+name: Build and Release Python Executable
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-executable:
+    runs-on: ubuntu-latest # You can change this to windows-latest or macos-latest if needed
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x' # Specify your Python version if needed
+
+    - name: Install PyInstaller
+      run: pip install pyinstaller
+
+    - name: Build executable with PyInstaller
+      run: pyinstaller --noconsole --onefile main.py
+
+    - name: Find executable path
+      id: find_executable
+      run: |
+        # PyInstaller puts the executable in the dist/ directory
+        # The name is usually the script name without extension
+        EXECUTABLE_NAME="main"
+        EXECUTABLE_PATH="dist/${EXECUTABLE_NAME}"
+        # Add .exe extension for Windows builds if you change runs-on
+        # if [[ "${RUNNER_OS}" == "Windows" ]]; then
+        #   EXECUTABLE_PATH="${EXECUTABLE_PATH}.exe"
+        # fi
+        echo "executable_path=${EXECUTABLE_PATH}" >> $GITHUB_OUTPUT
+        echo "executable_name=${EXECUTABLE_NAME}" >> $GITHUB_OUTPUT
+
+    - name: Upload executable to Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ${{ steps.find_executable.outputs.executable_path }}
+        name: ${{ github.event.release.name }}
+        tag_name: ${{ github.event.release.tag_name }}
+        body: ${{ github.event.release.body }}
+        prerelease: ${{ github.event.release.prerelease }}
+        draft: ${{ github.event.release.draft }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is automatically provided by GitHub
