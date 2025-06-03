@@ -35,24 +35,26 @@ The application primarily uses the following Python libraries:
     *   Converting images to NumPy arrays for processing.
 *   **NumPy:** For efficient numerical operations, particularly in the image overlap detection algorithm (calculating Sum of Absolute Differences).
 *   **os:** For path-related operations (checking if files exist).
-*   **threading:** To run the image processing tasks in a background thread, preventing the GUI from freezing.
+*   **threading:** Used by `concurrent.futures.ThreadPoolExecutor` to run the image processing tasks in a background thread, preventing the GUI from freezing.
+*   **ImageOps:** Used for image manipulation tasks.
+*   **concurrent.futures:** Used for managing a pool of threads to run tasks asynchronously.
 *   **tkinterdnd2 (Optional):** For adding drag-and-drop support for image files.
 
 ## How It Works
 
 1.  **Input:** The user selects two image files: a "top" image and a "bottom" image. These are typically two scans of a long document, where the bottom of the first scan overlaps with the top of the second scan.
-2.  **Overlap Detection (`find_best_overlap_height`):**
+2.  **Overlap Detection (`find_best_overlap_height_optimized`):**
     *   The images are converted to NumPy arrays.
     *   The algorithm iterates through possible overlap heights (a proportion of the shorter image's height).
     *   For each potential overlap, it compares a strip from the bottom of the top image with a strip from the top of the bottom image.
     *   The Sum of Absolute Differences (SAD) is calculated for these strips. A lower SAD indicates a better match.
     *   The overlap height that yields the minimum normalized SAD is chosen as the best overlap. A threshold is used to ensure the match is significant.
-3.  **Merging (`merge_images_vertically`):**
+3.  **Merging (`merge_images_vertically_optimized`):**
     *   If a valid overlap is found, the bottom image is cropped to remove the overlapping part that is already present in the top image.
     *   If the images have different widths, the narrower image is centered and padded with white to match the width of the wider image.
     *   A new blank image is created with the combined height (top image height + adjusted bottom image height) and the common (or padded) width.
     *   The top image is pasted at the top, and the adjusted bottom image is pasted directly below it.
-4.  **Resizing (`resize_image_to_spec`):**
+4.  **Resizing (`resize_image_to_spec_optimized`):**
     *   The user selects a target paper size (e.g., "8.5 x 13 inches").
     *   The merged image is resized to fit within the target dimensions (calculated based on 300 DPI) while maintaining its aspect ratio.
     *   If the aspect ratio doesn't perfectly match, the image is centered and padded with white to fill the target dimensions.
