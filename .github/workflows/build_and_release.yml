@@ -7,6 +7,9 @@ on:
 jobs:
   build-executable:
     runs-on: ubuntu-latest # You can change this to windows-latest or macos-latest if needed
+    permissions:
+      contents: write
+      releases: write
 
     steps:
     - name: Checkout code
